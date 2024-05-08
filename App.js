@@ -17,6 +17,8 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 export default function App() {
 
   const [ganhadorJogo, setGanhador] = useState(null)
+  const [jogadorX, setjogadorX] = useState(0)
+  const [jogadorO, setjogadorO] = useState(0)
   const [bolinhaouX, setBolinhaouX] = useState('ellipse-outline')
 
   const initialState = [
@@ -57,10 +59,6 @@ export default function App() {
       }
     }
 
-    if (verificaSeTerminoujogo) {
-      return 'EMPATE'
-    }
-
     // Verificar diagonais
     if (
       fNovoTabuleiro[0][0] === fNovoTabuleiro[1][1] &&
@@ -97,6 +95,10 @@ export default function App() {
         return fNovoTabuleiro[0][i]; // Retorna o símbolo do vencedor
       }
     }
+
+    if (verificaSeTerminoujogo) {
+      return 'EMPATE'
+    }
     return null;
   }
 
@@ -116,18 +118,30 @@ export default function App() {
       titulo,
       mensagem
     );
+    setNumeroVitorias()
     setJogo()
   }
 
+  const setNumeroVitorias = () => {
+    if (ganhadorJogo === 'ellipse-outline') {
+      setjogadorO(jogadorO + 1)
+    } else if (ganhadorJogo === 'close-outline') {
+      setjogadorX(jogadorX + 1)
+    } else {
+      //faz nada
+    }
+  }
   const setJogo = () => {
     setTabuleiro(initialState)
     setBolinhaouX('ellipse-outline')
     setGanhador(null)
+    
   }
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
+      <Text style={{ fontSize: 30, paddingRight: 16, }}> {jogadorO} </Text>
         <View style={styles.Quemcomeca}>
           <Ionicons name='ellipse-outline' size={80} />
           <Ionicons name={bolinhaouX === 'ellipse-outline' ? 'radio-button-on-sharp' : 'radio-button-off-sharp'} size={30} />
@@ -138,6 +152,7 @@ export default function App() {
           <Ionicons name='close-outline' size={110} />
           <Ionicons name={bolinhaouX === 'close-outline' ? 'radio-button-on-sharp' : 'radio-button-off-sharp'} size={30} style={{ top: -15 }} />
         </View>
+        <Text style={{ fontSize: 30, paddingLeft: 1 }}> {jogadorX} </Text>
 
       </View>
       <View style={styles.tabuleiro}>
@@ -194,14 +209,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   header: {
-    flex: 1,
+    flex: 2,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     // backgroundColor: '#000000'
   },
   tabuleiro: {
-    flex: 2,
+    flex: 3,
+    //backgroundColor: '#000000',
 
   },
   viewlinhas: {
@@ -211,7 +227,7 @@ const styles = StyleSheet.create({
   },
   linhastabuleiro: {
     height: 120,
-    width: 110,
+    width: 120,
     backgroundColor: '#FFF',
     alignItems: 'center',
     justifyContent: 'center',
